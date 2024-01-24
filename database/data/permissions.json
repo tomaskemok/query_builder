@@ -1,0 +1,35 @@
+[
+	{
+		"group": "Roles",
+		"level": 0,
+		"labels": [
+			{ "name": "Listar Roles",     "route_name": "roles.index" },
+			{ "name": "Actualizar Roles", "route_name": "roles.update" },
+			{ "name": "Mostrar Roles",    "route_name": "roles.show" },
+			{ "name": "Crear Roles",      "route_name": "roles.create" },
+			{ "name": "Eliminar Roles",   "route_name": "roles.destroy" }
+		]
+	},
+	{
+		"group": "Permisos",
+		"level": 0,
+		"labels": [
+			{ "name": "Listar Permisos",     "route_name": "permissions.index" },
+			{ "name": "Actualizar Permisos", "route_name": "permissions.update" },
+			{ "name": "Mostrar Permisos",    "route_name": "permissions.show" },
+			{ "name": "Crear Permisos",      "route_name": "permissions.create" },
+			{ "name": "Eliminar Permisos",   "route_name": "permissions.destroy" }
+		]
+	},
+	{
+		"group": "Usuarios",
+		"level": 1,
+		"labels": [
+			{ "name": "Listar Usuarios",     "route_name": "users.index" },
+			{ "name": "Actualizar Usuarios", "route_name": "users.update" },
+			{ "name": "Mostrar Usuarios",    "route_name": "users.show" },
+			{ "name": "Crear Usuarios",      "route_name": "users.create" },
+			{ "name": "Eliminar Usuarios",   "route_name": "users.destroy" }
+		]
+	}
+]

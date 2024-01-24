@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -41,4 +42,50 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the user's level.
+     *
+     * @return int
+     */
+    public function getLevelAttribute()
+    {
+        return $this->getLowestRoleLevel();
+    }
+
+    /**
+     * Returns the user's minimum role level.
+     *
+     * @return int
+     */
+    public function getLowestRoleLevel()
+    {
+        $roles = $this->roles;
+
+        if ($roles->isEmpty()) {
+            return 32767;
+        }
+
+        return $roles->min('level');
+    }
+
+    /**
+     * Check if the user is superadmin.
+     *
+     * @return boolean
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->getLevelAttribute() <= Role::SUPER_ADMIN_LEVEL;
+    }
+
+    /**
+     * Check if the user is admin.
+     *
+     * @return boolean
+     */
+    public function isAdmin(): bool
+    {
+        return $this->getLevelAttribute() <= Role::ADMINISTRADOR_LEVEL;
+    }
 }
