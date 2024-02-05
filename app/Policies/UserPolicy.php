@@ -18,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Listar Usuarios')->first();
+        $permission = Permission::where('name', 'Listar Usuarios')->first();
         
         return $permission && $user->can($permission->name);
     }
@@ -35,7 +35,7 @@ class UserPolicy
         if ($user->id == $model->id)
             return true;
         
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Mostrar Usuarios')->first();
+        $permission = Permission::where('name', 'Mostrar Usuarios')->first();
 
         return $permission && $user->can($permission->name) && $model->level >= $user->level;
     }
@@ -48,7 +48,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Crear Usuarios')->first();
+        $permission = Permission::where('name', 'Crear Usuarios')->first();
 
         return $permission && $user->can($permission->name);
     }
@@ -62,7 +62,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Actualizar Usuarios')->first();
+        $permission = Permission::where('name', 'Actualizar Usuarios')->first();
 
         return $permission && $user->can($permission->name) && $model->level >= $user->level;
     }
@@ -76,7 +76,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Eliminar Usuarios')->first();
+        $permission = Permission::where('name', 'Eliminar Usuarios')->first();
 
         return $permission && $user->can($permission->name) && $model->level >= $user->level;
     }

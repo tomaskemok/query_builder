@@ -19,7 +19,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Listar Roles')->first();
+        $permission = Permission::where('name', 'Listar Roles')->first();
         
         return $permission && $user->can($permission->name);
     }
@@ -33,7 +33,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Mostrar Roles')->first();
+        $permission = Permission::where('name', 'Mostrar Roles')->first();
         
         return $permission && $user->can($permission->name);
     }
@@ -46,7 +46,7 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Crear Roles')->first();
+        $permission = Permission::where('name', 'Crear Roles')->first();
         
         return $permission && $user->can($permission->name);
     }
@@ -60,7 +60,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Actualizar Roles')->first();
+        $permission = Permission::where('name', 'Actualizar Roles')->first();
         
         return $permission && $user->can($permission->name);
     }
@@ -74,7 +74,7 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        $permission = Permission::withoutGlobalScopes()->where('name', 'Eliminar Roles')->first();
+        $permission = Permission::where('name', 'Eliminar Roles')->first();
         
         return $permission && $user->can($permission->name);
     }

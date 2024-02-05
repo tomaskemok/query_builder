@@ -31,5 +31,27 @@
 			{ "name": "Crear Usuarios",      "route_name": "users.create" },
 			{ "name": "Eliminar Usuarios",   "route_name": "users.destroy" }
 		]
+	},
+	{
+		"group": "Productos",
+		"level": 1,
+		"labels": [
+			{ "name": "Listar Productos",     "route_name": "products.index" },
+			{ "name": "Actualizar Productos", "route_name": "products.update" },
+			{ "name": "Mostrar Productos",    "route_name": "products.show" },
+			{ "name": "Crear Productos",      "route_name": "products.create" },
+			{ "name": "Eliminar Productos",   "route_name": "products.destroy" }
+		]
+	},
+	{
+		"group": "Palabras",
+		"level": 1,
+		"labels": [
+			{ "name": "Listar Palabras",     "route_name": "words.index" },
+			{ "name": "Actualizar Palabras", "route_name": "words.update" },
+			{ "name": "Mostrar Palabras",    "route_name": "words.show" },
+			{ "name": "Crear Palabras",      "route_name": "words.create" },
+			{ "name": "Eliminar Palabras",   "route_name": "words.destroy" }
+		]
 	}
 ]
