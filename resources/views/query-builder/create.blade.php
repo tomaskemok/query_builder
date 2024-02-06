@@ -15,6 +15,31 @@
                         <label for="text" class="form-label">Excluir palabras en q:</label>
                         <input name="excluir_q" id="excluir_q" type="text" class="form-control">
                     </div>
+
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Incluir palabras en filter_by detalle:</label>
+                        <input name="incluir_filter_by_detalle" id="incluir_filter_by_detalle" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Incluir palabras en filter_by unidad de medida:</label>
+                        <input name="incluir_filter_by_unidad" id="incluir_filter_by_unidad" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Incluir palabras en filter_by nombre:</label>
+                        <input name="incluir_filter_by_nombre" id="incluir_filter_by_nombre" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Incluir palabras en filter_by cantidad:</label>
+                        <input name="incluir_filter_by_cantidad" id="incluir_filter_by_cantidad" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Incluir palabras en filter_by características:</label>
+                        <input name="incluir_filter_by_caracteristicas" id="incluir_filter_by_caracteristicas" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Incluir palabras en filter_by tipo de recepción:</label>
+                        <input name="incluir_filter_by_tipo_recepcion" id="incluir_filter_by_tipo_recepcion" type="text" class="form-control">
+                    </div>
                 </div>
                 
                 <div class="col">
@@ -77,15 +102,41 @@
             });
         }
 
-        function generarJson(incluirQ, excluirQ, query) {
-            let formattedIncluir = formatIncluirQ(incluirQ.val());
-            let formattedExcluir = formatExcluirQ(excluirQ.val());
+        function generarJson(
+            incluirQ,
+            excluirQ,
+            incluirFilterByDetalle,
+            incluirFilterByUnidad,
+            incluirFilterByNombre,
+            incluirFilterByCantidad,
+            incluirFilterByCaracteristicas,
+            incluirFilterByTipoRecepcion,
+            query
+            ) {
+            let formattedIncluir                    = formatIncluirQ(incluirQ.val());
+            let formattedExcluir                    = formatExcluirQ(excluirQ.val());
+
+            let filterByDetalle         = formatIncluirFilterBy(incluirFilterByDetalle.val(), 'detalle');
+            let filterByUnidad          = formatIncluirFilterBy(incluirFilterByUnidad.val(), 'unidad_medida');
+            let filterByNombre          = formatIncluirFilterBy(incluirFilterByNombre.val(), 'nombre');
+            let filterByCantidad        = formatIncluirFilterBy(incluirFilterByCantidad.val(), 'cantidad');
+            let filterByCaracteristicas = formatIncluirFilterBy(incluirFilterByCaracteristicas.val(), 'caracteristicas');
+            let filterByTipoRecepcion   = formatIncluirFilterBy(incluirFilterByTipoRecepcion.val(), 'tipo_recepcion');
+
+            let filterBy    = filterByDetalle;
+
+            filterBy    += filterBy.length > 0 && filterByUnidad.length > 0 ? ' && ' + filterByUnidad : filterByUnidad;
+            filterBy    += filterBy.length > 0 && filterByNombre.length > 0 ? ' && ' + filterByNombre : filterByNombre;
+            filterBy    += filterBy.length > 0 && filterByCantidad.length > 0 ? ' && ' + filterByCantidad : filterByCantidad;
+            filterBy    += filterBy.length > 0 && filterByCaracteristicas.length > 0 ? ' && ' + filterByCaracteristicas : filterByCaracteristicas;
+            filterBy    += filterBy.length > 0 && filterByTipoRecepcion.length > 0 ? ' && ' + filterByTipoRecepcion : filterByTipoRecepcion;
 
             let queryObject = new Object();
 
             queryObject.q                           = formattedIncluir + " " + formattedExcluir;
             queryObject.page                        = "1";
             queryObject.group_by                    = "nog";
+            queryObject.filter_by                   = filterBy;
             queryObject.per_page                    = "250";
             queryObject.query_by                    = "detalle";
             queryObject.drop_tokens_threshold       = "0";
@@ -106,7 +157,25 @@
                     result += oracion;
                 } else if (termino.trim()) {
                     sinonimos = getSinonimos(termino)?.join(' '); 
-                    result += sinonimos;
+                    result += result.length > 0 ? ' ' + sinonimos : sinonimos;
+                }
+            });
+
+            return result;
+        }
+
+        function formatIncluirFilterBy(incluirFilterByDetalleVal, text) {
+            let arrTerminos = incluirFilterByDetalleVal.split(",");
+            let result = '';
+
+            arrTerminos.forEach((termino, index) => {
+                if (termino.trim()) {
+                    sinonimos = getSinonimos(termino)?.join(' ');
+                    if (index != 0) {
+                        result += ' && ' + text + ': [' + sinonimos.replace(/ /g,", ") + ']';
+                    } else {
+                        result += text + ': [' + sinonimos.replace(/ /g,", ") + ']';
+                    }
                 }
             });
 
@@ -152,13 +221,19 @@
         }
 
         $(function() {
-            let query               = $('#query');
-            let queryForm           = $('#query_form');
-            let btnCrearProducto    = $('#crear_producto');
-            let errorQuery          = $('#error_query');
-            let generarQuery        = $('#generar_query');
-            let incluirQ            = $('#incluir_q');
-            let excluirQ            = $('#excluir_q');
+            let query                               = $('#query');
+            let queryForm                           = $('#query_form');
+            let btnCrearProducto                    = $('#crear_producto');
+            let errorQuery                          = $('#error_query');
+            let generarQuery                        = $('#generar_query');
+            let incluirQ                            = $('#incluir_q');
+            let excluirQ                            = $('#excluir_q');
+            let incluirFilterByDetalle              = $('#incluir_filter_by_detalle');
+            let incluirFilterByUnidad               = $('#incluir_filter_by_unidad');
+            let incluirFilterByNombre               = $('#incluir_filter_by_nombre');
+            let incluirFilterByCantidad             = $('#incluir_filter_by_cantidad');
+            let incluirFilterByCaracteristicas      = $('#incluir_filter_by_caracteristicas');
+            let incluirFilterByTipoRecepcion        = $('#incluir_filter_by_tipo_recepcion');
             
             validarQuery(query, btnCrearProducto, errorQuery);
 
@@ -169,7 +244,17 @@
             generarQuery.on('click', function(e) {
                 e.preventDefault();
                 
-                generarJson(incluirQ, excluirQ, query);
+                generarJson(
+                    incluirQ, 
+                    excluirQ, 
+                    incluirFilterByDetalle, 
+                    incluirFilterByUnidad,
+                    incluirFilterByNombre,
+                    incluirFilterByCantidad,
+                    incluirFilterByCaracteristicas,
+                    incluirFilterByTipoRecepcion,
+                    query
+                    );
 
                 validarQuery(query, btnCrearProducto, errorQuery);
             });

@@ -18,7 +18,11 @@ class AjaxGetSinonimosController extends Controller
     public function __invoke(Request $request)
     {
         if (request()->ajax()) {
-            if ($sinonimos = Palabra::where('palabra', 'ilike', request()->palabra)->first()?->getSinonimosYPlurales()) {
+            $sinonimos = Palabra::where('palabra', 'ilike', request()->palabra)->first()?->getSinonimosYPlurales();
+
+            $sinonimos = empty($sinonimos) ? Sinonimo::where('sinonimo', 'ilike', request()->palabra)->first()?->palabra->getSinonimosYPlurales() : $sinonimos;
+            
+            if (!empty($sinonimos)) {
                 return response()->json([
                     'sinonimos' => $sinonimos,
                 ]);
