@@ -59,7 +59,7 @@ class Producto extends Resource
                     parse_str($str, $output);
                     $query = $output['q'];
 
-                    return $query;
+                    return json_decode(base64_decode($query));
                 })
         ];
     }

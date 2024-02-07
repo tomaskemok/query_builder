@@ -17,8 +17,12 @@ class CrearProductoController extends Controller
         if (request()->ajax()) {
             $baseUrl = config('nova.path')."/resources/productos/new?q=";
 
+            $query = base64_encode(json_encode([
+                request()->q
+            ]));
+
             return response()->json([
-                'url' => $baseUrl . request()->q,
+                'url' => $baseUrl . $query,
             ]);
         }
     }

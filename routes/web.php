@@ -22,7 +22,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     Route::get('/', function() {
-        return redirect(config('nova.path'));
+        return redirect()->route('nova.pages.home');
     });
 
     Route::post('/crear-producto', CrearProductoController::class)->name('crear_producto');
