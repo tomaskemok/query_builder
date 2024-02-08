@@ -38,11 +38,22 @@ class Palabra extends Model
      */
     public function getSingularAndPluralAttribute()
     {
-        return $this->palabra . " " . $this->plural;
+        return [
+            $this->palabra,
+            $this->plural
+        ];
     }
 
     public function getSinonimosYPlurales()
     {
-        return array_merge([$this->singular_and_plural], $this->sinonimos->pluck('singular_and_plural')->toArray());
+        $arrSinonimosPlurales = array_merge(
+            $this->sinonimos->pluck('sinonimo')->toArray(), 
+            $this->sinonimos->pluck('plural')->toArray(), 
+            $this->singular_and_plural
+        );
+
+        sort($arrSinonimosPlurales);
+
+        return $arrSinonimosPlurales;
     }
 }

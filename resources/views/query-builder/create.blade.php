@@ -221,113 +221,41 @@
             incluirFilterByCaracteristicas,
             incluirFilterByTipoRecepcion,
             queryByValues,
-            query
+            query,
+            btn,
+            validarQuery,
+            btnCrearProducto,
+            errorQuery,
             ) {
-            let formattedIncluir                    = formatIncluirQ(incluirQ.val());
-            let formattedExcluir                    = formatExcluirQ(excluirQ.val());
+                btn.prop('disabled', true);
 
-            let filterByDetalle         = formatIncluirFilterBy(incluirFilterByDetalle.val(), 'detalle');
-            let filterByUnidad          = formatIncluirFilterBy(incluirFilterByUnidad.val(), 'unidad_medida');
-            let filterByNombre          = formatIncluirFilterBy(incluirFilterByNombre.val(), 'nombre');
-            let filterByCantidad        = formatIncluirFilterBy(incluirFilterByCantidad.val(), 'cantidad');
-            let filterByCaracteristicas = formatIncluirFilterBy(incluirFilterByCaracteristicas.val(), 'caracteristicas');
-            let filterByTipoRecepcion   = formatIncluirFilterBy(incluirFilterByTipoRecepcion.val(), 'tipo_recepcion');
+                var filtersBy = {};
+                filtersBy["detalle"]            = incluirFilterByDetalle.val();
+                filtersBy["unidad_medida"]      = incluirFilterByUnidad.val();
+                filtersBy["nombre"]             = incluirFilterByNombre.val();
+                filtersBy["caracteristicas"]    = incluirFilterByCaracteristicas.val();
+                filtersBy["tipo_recepcion"]     = incluirFilterByTipoRecepcion.val();
 
-            let filterBy    = filterByDetalle;
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('generar_query') }}",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        "incluir_q" : incluirQ.val(),
+                        "excluir_q" : excluirQ.val(),
+                        'filters_by': filtersBy,
+                        'query_by'  : queryByValues,
+                    },
+                    success: function(data) {
+                        query.val(JSON.stringify(data.query, false, 4));
 
-            filterBy    += filterBy.length > 0 && filterByUnidad.length > 0 ? ' && ' + filterByUnidad : filterByUnidad;
-            filterBy    += filterBy.length > 0 && filterByNombre.length > 0 ? ' && ' + filterByNombre : filterByNombre;
-            filterBy    += filterBy.length > 0 && filterByCantidad.length > 0 ? ' && ' + filterByCantidad : filterByCantidad;
-            filterBy    += filterBy.length > 0 && filterByCaracteristicas.length > 0 ? ' && ' + filterByCaracteristicas : filterByCaracteristicas;
-            filterBy    += filterBy.length > 0 && filterByTipoRecepcion.length > 0 ? ' && ' + filterByTipoRecepcion : filterByTipoRecepcion;
+                        btn.prop('disabled', false);
 
-            let queryObject = new Object();
-
-            queryObject.q                           = formattedIncluir + " " + formattedExcluir;
-            queryObject.page                        = "1";
-            queryObject.group_by                    = "nog";
-            queryObject.filter_by                   = filterBy;
-            queryObject.per_page                    = "250";
-            queryObject.query_by                    = queryByValues.join(', ');
-            queryObject.drop_tokens_threshold       = "0";
-            queryObject.num_typos                   = "0";
-            queryObject.prefix                      = "false";
-            
-            query.val(JSON.stringify(queryObject, false, 4));
-        }
-
-        function formatIncluirQ(incluirQVal) {
-            let arrTerminos = incluirQVal.split(",");
-            let result = '';
-
-            arrTerminos.forEach(termino => {
-                if (termino.indexOf('"') > -1) {
-                    let oracion = termino.match("(.*)")[1];
-
-                    result += oracion;
-                } else if (termino.trim()) {
-                    sinonimos = getSinonimos(termino)?.join(' '); 
-                    result += result.length > 0 ? ' ' + sinonimos : sinonimos;
-                }
-            });
-
-            return result;
-        }
-
-        function formatIncluirFilterBy(incluirFilterByDetalleVal, text) {
-            let arrTerminos = incluirFilterByDetalleVal.split(",");
-            let result = '';
-
-            arrTerminos.forEach((termino, index) => {
-                if (termino.trim()) {
-                    sinonimos = getSinonimos(termino)?.join(' ');
-                    if (index != 0) {
-                        result += ' && ' + text + ': [' + sinonimos.replace(/ /g,", ") + ']';
-                    } else {
-                        result += text + ': [' + sinonimos.replace(/ /g,", ") + ']';
+                        validarQuery(query, btnCrearProducto, errorQuery);
                     }
-                }
-            });
-
-            return result;
-        }
-
-        function formatExcluirQ(excluirQVal) {
-            let arrTerminos = excluirQVal.split(",");
-            let result = '';
-
-            arrTerminos.forEach(termino => {
-                if (termino.indexOf('"') > -1) {
-                    let oracion = termino.match("(.*)")[1];
-
-                    result += '-' + $.trim(oracion);
-                } else if (termino.trim()) {
-                    sinonimos = getSinonimos(termino)?.join(' '); 
-                    result += '-' + sinonimos.replace(' ', ' -') + ' ';
-                }
-            });
-
-            return result;
-        }
-
-        function getSinonimos(palabra) {
-            let data = {
-                palabra: palabra,
-            };
-
-            let result = false;
-
-            $.ajax({
-                type: 'GET',
-                url:  "{{route('obtener_sinonimos')}}",
-                data: data,
-                async: false,  
-                success: function(data) {
-                    result = data.sinonimos; 
-                }
-            });
-            
-            return result;
+                });
         }
 
         $(function() {
@@ -368,10 +296,12 @@
                     incluirFilterByCaracteristicas,
                     incluirFilterByTipoRecepcion,
                     queryByValues,
-                    query
+                    query,
+                    generarQuery,
+                    validarQuery,
+                    btnCrearProducto,
+                    errorQuery
                     );
-
-                validarQuery(query, btnCrearProducto, errorQuery);
             });
 
             queryForm.on('submit', function(e) {

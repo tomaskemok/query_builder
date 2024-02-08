@@ -57,7 +57,7 @@ class Producto extends Resource
                     $url = $request->headers->get('referer');
                     $str = parse_url($url, PHP_URL_QUERY);
                     parse_str($str, $output);
-                    $query = $output['q'];
+                    $query = !empty($output['q']) ? $output['q'] : '';
 
                     return json_decode(base64_decode($query));
                 })

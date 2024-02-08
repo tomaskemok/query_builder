@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AjaxGenerarQueryController;
 use App\Http\Controllers\AjaxGetSinonimosController;
 use App\Http\Controllers\CrearProductoController;
 use App\Http\Controllers\QueryController;
@@ -26,7 +27,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::post('/crear-producto', CrearProductoController::class)->name('crear_producto');
-    Route::get('/obtener-sinonimos', AjaxGetSinonimosController::class)->name('obtener_sinonimos');
+    Route::post('/generar-query', AjaxGenerarQueryController::class)->name('generar_query');
 });
 
 Auth::routes();

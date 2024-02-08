@@ -38,6 +38,9 @@ class Sinonimo extends Model
      */
     public function getSingularAndPluralAttribute()
     {
-        return $this->sinonimo . " " . $this->plural;
+        return [
+            $this->sinonimo,
+            $this->plural
+        ];
     }
 }
