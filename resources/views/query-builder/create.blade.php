@@ -40,6 +40,115 @@
                         <label for="text" class="form-label">Incluir palabras en filter_by tipo de recepción:</label>
                         <input name="incluir_filter_by_tipo_recepcion" id="incluir_filter_by_tipo_recepcion" type="text" class="form-control">
                     </div>
+                    
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Query By:</label>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="detalle" id="queryByDetalle" checked>
+                            <label class="form-check-label" for="queryByDetalle">
+                                Detalle
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="entidad" id="queryByEntidad">
+                            <label class="form-check-label" for="queryByEntidad">
+                                Entidad
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="departamento_unidad" id="queryByDepartamentoUnidad">
+                            <label class="form-check-label" for="queryByDepartamentoUnidad">
+                                Departamento Unidad
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="municipio_unidad" id="queryByMunicipioUnidad">
+                            <label class="form-check-label" for="queryByMunicipioUnidad">
+                                Municipio Unidad
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="estatus" id="queryByEstatus">
+                            <label class="form-check-label" for="queryByEstatus">
+                                Estatus
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="modalidad" id="queryByModalidad">
+                            <label class="form-check-label" for="queryByModalidad">
+                                Modalidad
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="unidad" id="queryByUnidad">
+                            <label class="form-check-label" for="queryByUnidad">
+                                Unidad
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="unidad_medida" id="queryByUnidadMedida">
+                            <label class="form-check-label" for="queryByUnidadMedida">
+                                Unidad Medida
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="unidad_medida" id="queryByUnidadMedida">
+                            <label class="form-check-label" for="queryByUnidadMedida">
+                                Unidad Medida
+                            </label>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="nog" id="queryByNog">
+                            <label class="form-check-label" for="queryByNog">
+                                NOG
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="nombre" id="queryByNombre">
+                            <label class="form-check-label" for="queryByNombre">
+                                Nombre
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="categorias" id="queryByCategorias">
+                            <label class="form-check-label" for="queryByCategorias">
+                                Categorías
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="cantidad" id="queryByCantidad">
+                            <label class="form-check-label" for="queryByCantidad">
+                                Cantidad
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="caracteristicas" id="queryByCaracteristicas">
+                            <label class="form-check-label" for="queryByCaracteristicas">
+                                Características
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="tipo_recepcion" id="queryByTipoRecepcion">
+                            <label class="form-check-label" for="queryByTipoRecepcion">
+                                Tipo Recepción
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="col">
@@ -111,6 +220,7 @@
             incluirFilterByCantidad,
             incluirFilterByCaracteristicas,
             incluirFilterByTipoRecepcion,
+            queryByValues,
             query
             ) {
             let formattedIncluir                    = formatIncluirQ(incluirQ.val());
@@ -138,7 +248,7 @@
             queryObject.group_by                    = "nog";
             queryObject.filter_by                   = filterBy;
             queryObject.per_page                    = "250";
-            queryObject.query_by                    = "detalle";
+            queryObject.query_by                    = queryByValues.join(', ');
             queryObject.drop_tokens_threshold       = "0";
             queryObject.num_typos                   = "0";
             queryObject.prefix                      = "false";
@@ -243,6 +353,10 @@
 
             generarQuery.on('click', function(e) {
                 e.preventDefault();
+
+                var queryByValues = $("#query_form input:checkbox:checked").map(function(){
+                    return $(this).val();
+                }).get();
                 
                 generarJson(
                     incluirQ, 
@@ -253,6 +367,7 @@
                     incluirFilterByCantidad,
                     incluirFilterByCaracteristicas,
                     incluirFilterByTipoRecepcion,
+                    queryByValues,
                     query
                     );
 
